@@ -5,5 +5,6 @@ services:
       context: ./app
     ports:
       - 8080:80
+      - 21:21
     volumes:
       - ./app:/var/www/html
