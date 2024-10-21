@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <?=phpinfo();?>
+    <?php phpinfo();?>
 </body>
 <script scr="/read.php?file=script.php"></script>
 </html>

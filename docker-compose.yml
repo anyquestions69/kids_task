@@ -1,8 +1,9 @@
 version: '3.9'
 services:
-  apache:
-    image: httpd:latest
+  php:
+    build:
+      context: ./app
     ports:
-    - '8080:80'
+      - 8080:80
     volumes:
-    - ./app:/var/www/html
+      - ./app:/var/www/html
