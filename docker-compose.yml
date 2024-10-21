@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: ./app
+    working_dir: /opt/server
+    env_file:
+      - .env
+    expose:
+      - '3000'
+    restart: always
+    command: npm run start
+
+  # Контейнер с базой данных
+  # db:
+  #   image: postgres:12-alpine
+  #   environment:
+  #     - POSTGRES_USER=${DB_USER}
+  #     - POSTGRES_PASSWORD=${DB_PASSWORD}
+  #     #- POSTGRES_DB=${DB_NAME}
+  #   volumes:
+  #     - postgres:/var/lib/postgresql/data
+  #     - ./db_data:/docker-entrypoint-initdb.d
+  #   expose:
+  #     - '5432'
+  #   restart: always
+
+  nginx:
+    container_name: proxy_nginx
+    depends_on:
+      - app
+      - db
+    image: nginx:latest
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    restart: always
+
+volumes:
+  postgres:
+  data:
+
+networks:
+  network: {}
