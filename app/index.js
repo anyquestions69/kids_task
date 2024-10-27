@@ -1,37 +1,28 @@
-const express= require('express')
-var basicAuth = require('basic-auth');
-const { exec, spawn } = require('node:child_process');
-var bodyParser = require('body-parser')
-const app = express()
-app.use(bodyParser.urlencoded({ extended: true }))
+const WebSocket = require('ws');
+const { XMLParser } = require('fast-xml-parser');
+const wsServer = new WebSocket.Server({ port: 3000 });
 
-var auth = function(username, password) {
-    return function(req, res, next) {
-      var user = basicAuth(req);
-  
-      if (!user || user.name !== username || user.pass !== password) {
-        res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
-        return res.send(401);
-      }
-  
-      next();
-    };
-  };
-app.get('/',(req,res)=>{
-    const url = req.query.url
-    exec('curl '+url, (err, stdout, stderr) => {
-        if (err) {
-          console.error(err);
-          return res.send(stderr)
+wsServer.on('connection', onConnect);
+
+function onConnect(wsClient) {
+    console.log('Новый пользователь');
+    wsClient.send('Привет');
+
+    wsClient.on('close', function() {
+        console.log('Пользователь отключился');
+    });
+
+    wsClient.on('message', function(message) {
+        console.log(message);
+        const parser = new XMLParser();
+        
+        try {
+          const json = parser.parse(message);
+        console.log(json)
+        } catch (error) {
+            console.log('Ошибка', error);
         }
-        console.log(stdout);
-        return res.send(stdout)
-      });
-})
-app.post('/issue', (req,res)=>{
-    return res.send(JSON.stringify(req.body))
-})
-app.get('/admin', auth('admin', 'iowe3-03ndin2in13'), (req,res)=>{
-    return res.send('admin')
-})
-app.listen(3000)
+    });
+}
+
+console.log('Сервер запущен на 3000 порту');

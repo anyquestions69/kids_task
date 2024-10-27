@@ -1,8 +1,13 @@
 {
+  "scripts":{
+    "start":"nodemon index"
+  },
   "dependencies": {
     "basic-auth": "^2.0.1",
     "body-parser": "^1.20.3",
     "express": "^4.21.1",
-    "nodemon": "^3.1.7"
+    "fast-xml-parser": "^4.5.0",
+    "nodemon": "^3.1.7",
+    "ws": "^8.18.0"
   }
 }
